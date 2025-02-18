@@ -3,6 +3,7 @@ conceptgraph/outputs
 conceptgraph/scripts/wandb
 conceptgraph/results
 conceptgraph/tmp
+conceptgraph/Datasets
 .vscode/launch.json
 manipulation/contact_graspnet/examples
 manipulation/contact_graspnet/test_data
@@ -66,7 +67,8 @@ cover/
 # Translations
 *.mo
 *.pot
-
+*.zip
+*.gz
 # Django stuff:
 *.log
 local_settings.py
