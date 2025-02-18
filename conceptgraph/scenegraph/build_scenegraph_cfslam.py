@@ -1,7 +1,6 @@
 """
 Build a scene graph from the segment-based map and captions from LLaVA.
 """
-
 import gc
 import gzip
 import json
@@ -14,12 +13,12 @@ from types import SimpleNamespace
 from typing import List, Literal, Union
 from textwrap import wrap
 from conceptgraph.utils.general_utils import prjson
-
+from html import escape  # 导入 escape 函数来转义特殊字符
 import cv2
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
+import re
 import numpy as np
 import rich
 import torch
@@ -198,6 +197,9 @@ def blackout_nonmasked_area(image_pil, mask):
     black_image = Image.fromarray(black_image)
     return black_image
 
+def clean_latex(text):
+    return re.sub(r'\$', '\\textdollar{}', text)
+
 def plot_images_with_captions(images, captions, confidences, low_confidences, masks, savedir, idx_obj):
     """ This is debug helper function that plots the images with the captions and masks overlaid and saves them to a directory. This way you can inspect exactly what the LLaVA model is captioning which image with the mask, and the mask confidence scores overlaid."""
     
@@ -220,7 +222,7 @@ def plot_images_with_captions(images, captions, confidences, low_confidences, ma
             green_mask[masks[i]] = [0, 255, 0]  # Green color where mask is True
             ax.imshow(green_mask, alpha=0.15)  # Overlay with transparency
 
-        title_text = f"Caption: {captions[i]}\nConfidence: {confidences[i]:.2f}"
+        title_text = f"Caption: {clean_latex(captions[i])}\nConfidence: {confidences[i]:.2f}"
         if low_confidences[i]:
             title_text += "\nLow Confidence"
         
@@ -234,11 +236,11 @@ def plot_images_with_captions(images, captions, confidences, low_confidences, ma
     for i in range(n, nrows * ncols):
         row, col = divmod(i, 3)
         axarr[row][col].axis('off')
-    
+
+
     plt.tight_layout()
     plt.savefig(savedir / f"{idx_obj}.png")
     plt.close()
-
 
 
 def extract_node_captions(args):
@@ -293,6 +295,7 @@ def extract_node_captions(args):
         conf = obj["conf"]
         conf = np.array(conf)
         idx_most_conf = np.argsort(conf)[::-1]
+
 
         features = []
         captions = []

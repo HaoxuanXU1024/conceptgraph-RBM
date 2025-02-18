@@ -23,11 +23,11 @@ mapping:
   iters_first: 1500
   iters: 60
 camera_params:
-  image_height: 720
-  image_width: 1280
-  fx: 612.194
-  fy: 610.789
-  cx: 637.383
-  cy: 358.676
-  png_depth_scale: 1000 #for depth image in png format
+  image_height: 680
+  image_width: 1200
+  fx: 600.0
+  fy: 600.0
+  cx: 599.5
+  cy: 339.5
+  png_depth_scale: 6553.5 #for depth image in png format
   crop_edge: 0

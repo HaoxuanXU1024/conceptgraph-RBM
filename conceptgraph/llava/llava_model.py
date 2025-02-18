@@ -589,13 +589,15 @@ class LLaVaChat(object):
         self.model_path = model_path
         self.conv_mode = conv_mode
         self.num_gpus = num_gpus
+        
+        print(f'self.conv_mode= {self.conv_mode}')
 
         # Handle multi-gpu config
         if self.num_gpus == 1:
             kwargs = {}
         else:
             kwargs = {
-                "device_map": "auto",
+                "device_map": "cuda:0",
                 "max_memory": {i: "13GiB" for i in range(self.num_gpus)},
             }
 

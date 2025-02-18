@@ -98,8 +98,10 @@ class GradSLAMDataset(torch.utils.data.Dataset):
         stride: Optional[int] = 1,
         start: Optional[int] = 0,
         end: Optional[int] = -1,
-        desired_height: int = 480,
-        desired_width: int = 640,
+        # desired_height: int = 480,
+        # desired_width: int = 640,
+        desired_height: int = 720,
+        desired_width: int = 1280,
         channels_first: bool = False,
         normalize_color: bool = False,
         device="cuda:0",
@@ -107,7 +109,7 @@ class GradSLAMDataset(torch.utils.data.Dataset):
         load_embeddings: bool = False,
         embedding_dir: str = "feat_lseg_240_320",
         embedding_dim: int = 512,
-        relative_pose: bool = True, # If True, the pose is relative to the first frame
+        relative_pose: bool = False, # If True, the pose is relative to the first frame
         **kwargs,
     ):
         super().__init__()
@@ -187,8 +189,10 @@ class GradSLAMDataset(torch.utils.data.Dataset):
         # self.transformed_poses = datautils.poses_to_transforms(self.poses)
         self.poses = torch.stack(self.poses)
         if self.relative_pose:
+            print("Preprocessing poses to be relative to the first frame")
             self.transformed_poses = self._preprocess_poses(self.poses)
         else:
+            print("Preprocessing poses to be absolute")
             self.transformed_poses = self.poses
 
     def __len__(self):
